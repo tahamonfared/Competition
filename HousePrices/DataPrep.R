@@ -71,17 +71,27 @@ train$Alley<-factor(train$Alley,
 train$Street<-factor(train$Street, 
                      levels = c("Grvl", "Pave"), 
                      ordered = TRUE)
-train$YearBuilt<-factor(train$YearBuilt, levels = sort(unique(train$YearBuilt)),
-                        ordered=TRUE)
-train$YearRemodAdd<-factor(train$YearRemodAdd, levels = sort(unique(train$YearRemodAdd)),
-                        ordered=TRUE)
-train$YrSold<-factor(train$YrSold, levels = sort(unique(train$YrSold)),
-                           ordered=TRUE)
-train$MoSold<-factor(train$MoSold, levels = sort(unique(train$MoSold)),
-                     ordered=TRUE)
-train$GarageYrBlt<-factor(train$GarageYrBlt, levels = sort(unique(train$GarageYrBlt)),
-                     ordered=TRUE)
 
+train$YearBuilt<-as.numeric(2018-train$YearBuilt)
+train$YearRemodAdd<-as.numeric(2018-train$YearRemodAdd)
+train$MoSold<-factor(train$MoSold)
+train$GarageYrBlt<-as.numeric(2018-train$GarageYrBlt)
+
+train$PoolArea[train$PoolArea==0]<-NA
+train$PoolQC[train$PoolQC==0]<-NA
+train$MiscVal[train$MiscVal==0]<-NA
+train$ScreenPorch[train$ScreenPorch==0]<-NA
+train$X3SsnPorch[train$X3SsnPorch==0]<-NA
+train$EnclosedPorch[train$EnclosedPorch==0]<-NA
+train$OpenPorchSF[train$OpenPorchSF==0]<-NA
+train$WoodDeckSF[train$WoodDeckSF==0]<-NA
+train$GarageArea[train$GarageArea==0]<-NA
+train$GarageCars[train$GarageCars==0]<-NA
+train$LowQualFinSF[train$LowQualFinSF==0]<-NA
+train$X2ndFlrSF[train$X2ndFlrSF==0]<-NA
+train$BsmtFinSF2[train$BsmtFinSF2==0]<-NA
+train$BsmtFinSF1[train$BsmtFinSF1==0]<-NA
+train$MasVnrArea[train$MasVnrArea==0]<-NA
 
 ##---------------------------------------------------------------
   
@@ -155,14 +165,22 @@ test$Alley<-factor(test$Alley,
 test$Street<-factor(test$Street, 
                     levels = c("Grvl", "Pave"), 
                     ordered = TRUE)
-test$YearBuilt<-factor(test$YearBuilt, levels = sort(unique(test$YearBuilt)),
-                       ordered=TRUE)
-test$YearRemodAdd<-factor(test$YearRemodAdd, levels = sort(unique(test$YearRemodAdd)),
-                          ordered=TRUE)
-test$YrSold<-factor(test$YrSold, levels = sort(unique(test$YrSold)),
-                    ordered=TRUE)
-test$MoSold<-factor(test$MoSold, levels = sort(unique(test$MoSold)),
-                    ordered=TRUE)
-test$GarageYrBlt<-factor(test$GarageYrBlt, levels = sort(unique(test$GarageYrBlt)),
-                         ordered=TRUE)
-
+test$YearBuilt<-as.numeric(2018-test$YearBuilt)
+test$YearRemodAdd<-as.numeric(2018-test$YearRemodAdd)
+test$MoSold<-factor(test$MoSold)
+test$GarageYrBlt<-as.numeric(2018-test$GarageYrBlt)
+test$PoolArea[test$PoolArea==0]<-NA
+test$PoolQC[test$PoolQC==0]<-NA
+test$MiscVal[test$MiscVal==0]<-NA
+test$ScreenPorch[test$ScreenPorch==0]<-NA
+test$X3SsnPorch[test$X3SsnPorch==0]<-NA
+test$EnclosedPorch[test$EnclosedPorch==0]<-NA
+test$OpenPorchSF[test$OpenPorchSF==0]<-NA
+test$WoodDeckSF[test$WoodDeckSF==0]<-NA
+test$GarageArea[test$GarageArea==0]<-NA
+test$GarageCars[test$GarageCars==0]<-NA
+test$LowQualFinSF[test$LowQualFinSF==0]<-NA
+test$X2ndFlrSF[test$X2ndFlrSF==0]<-NA
+test$BsmtFinSF2[test$BsmtFinSF2==0]<-NA
+test$BsmtFinSF1[test$BsmtFinSF1==0]<-NA
+test$MasVnrArea[test$MasVnrArea==0]<-NA
