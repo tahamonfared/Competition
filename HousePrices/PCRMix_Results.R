@@ -1,6 +1,7 @@
 ##Solve through PCAmixdata
 #install.packages("PCAmixdata")
 
+
 usablecol<-function(col){
   if(is.numeric(train[,col])){
     if(sum(is.na(train[,col]))>.8*nrow(train)){
@@ -35,11 +36,11 @@ X_quanti<-unlist(sapply(setdiff(1:ncol(train),nonusableatts), find_quanti))
 X_quali<-setdiff(setdiff(1:ncol(train),nonusableatts), c(10,X_quanti))
 X_quanti<-X_quanti[-c(1,length(X_quanti))]
 
-pca_res<-PCAmix(X.quanti = test[,X_quanti], X.quali = test[,X_quali], 
+pca_res<-PCAmix(X.quanti = train[,X_quanti], X.quali = train[,X_quali], 
                 ndim = 5,rename.level = TRUE,graph = TRUE)
 pca_res<-PCArot(pca_res, 5)
 
-PCR_res<-lm(test$SalePrice[-c(524,1299)]~(pca_res$ind$coord[-c(524,1299),]))
+PCR_res<-lm(train$SalePrice[-c(524,1299)]~(pca_res$ind$coord[-c(524,1299),]))
 
 pcamix_ontest<-predict(pca_res, X.quanti = test[,X_quanti], X.quali = test[,X_quali])
 pcamix_ontest<-data.frame(pcamix_ontest)
@@ -52,13 +53,6 @@ regres<-function(arr){
 
 
 prediction_pcamixmodel<-apply(pcamix_ontest, 1, regres)
-
-
-x<-cbind(test[,c(1,81)], prediction_pcamixmodel)
-plot(x[,1],x[,2],pch=20, col = 'blue')
-points(x[,1],x[,3], pch=19,col='red')
-require(scales)
-abline(v = x[,1],col = alpha("grey",.4))
 pcamixmodel_results<-cbind(test[1], SalePrice = prediction_pcamixmodel)
 write.csv(x = pcamixmodel_results,file = "PCRMixedModel_Results.csv",row.names = FALSE)
 
