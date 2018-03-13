@@ -5,9 +5,11 @@ test_rand<-sample(1:nrow(train), size=200)
 test_ft <-train[test_rand,]
 train_ft<-train[-test_rand,]
 
+
 data<-train
 i<-5
 require(PCAmixdata)
+require(dplyr)
 
 explore_attributes<-function(data){
   res<-list()
@@ -32,16 +34,16 @@ explore_attributes<-function(data){
                        })
     }
   }
-  res<-data.frame(matrix(unlist(res),nrow = ncol(data),byrow=TRUE))
-  names(res)<-c("Column_Number","Column_name=","IsNumeric","Percent_NA","Cat_level_highest","Percent_InCat")
+  res<-data.frame(matrix(unlist(res),nrow = ncol(data),byrow=TRUE),stringsAsFactors = FALSE)
+  names(res)<-c("Column_Number","Column_name","IsNumeric","Percent_NA","Cat_level_highest","Percent_InCat")
   return(res)
 }
 
 usability<-explore_attributes(train)
 
 
-X_quanti<-unlist(sapply(setdiff(1:ncol(train),nonusableatts), find_quanti))
-X_quali<-setdiff(setdiff(1:ncol(train),nonusableatts), c(10,X_quanti))
+X_quanti<-as.numeric((usability%>%filter(IsNumeric == TRUE & Percent_NA<.9))$Column_Number)
+X_quali<-as.numeric((usability%>%filter(IsNumeric == FALSE & (Percent_NA<.9 | Percent_InCat<.9)))$Column_Number)
 X_quanti<-X_quanti[-c(1,length(X_quanti))]
 
 pca_res<-PCAmix(X.quanti = train_ft[,X_quanti], X.quali = train_ft[,X_quali], 
