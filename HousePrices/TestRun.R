@@ -5,37 +5,40 @@ test_rand<-sample(1:nrow(train), size=200)
 test_ft <-train[test_rand,]
 train_ft<-train[-test_rand,]
 
-usablecol<-function(col){
-  if(is.numeric(train[,col])){
-    if(sum(is.na(train[,col]))>.8*nrow(train)){
-      return(col)
-    }else{
-      return(NULL)
-    }
-  }else{
-    if(max(summary(train[,col]))>.8*nrow(train))
-    {
-      return(col)
-    }
-    else{
-      return(NULL)
-    }
-  }
-}
-nonusableatts<-unlist(sapply(1:ncol(train), usablecol))
-
-
+data<-train
+i<-5
 require(PCAmixdata)
 
-find_quanti<-function(col){
-  if(is.numeric(train[,col])){
-    return(col)
+explore_attributes<-function(data){
+  res<-list()
+  N<-nrow(data)
+  for(i in 1:ncol(data)){
+    if(is.numeric(data[,i])){
+      res[[i]]<-list(i,names(data)[i],TRUE,sum(is.na(data[,i]))/N,
+                    NA, NA)
+    }else{
+      x<-summary(data[,i])
+      res[[i]]<-list(i,names(data)[i], FALSE,
+                     if(names(x)[x==max(x)]=="NA's"){max(x)/N}else{NA},
+                     names(x)[x==max(x)],
+                     if(names(x)[x==max(x)]=="NA's"){
+                       NA
+                       }else{
+                       if(!is.logical(data[,i])){
+                         max(x)/N
+                         }else{
+                           max(sum(data[,i]), N-sum(data[,i]))/N
+                           }
+                       })
+    }
   }
-  else{
-    return(NULL)
-  }
-  
+  res<-data.frame(matrix(unlist(res),nrow = ncol(data),byrow=TRUE))
+  names(res)<-c("Column_Number","Column_name=","IsNumeric","Percent_NA","Cat_level_highest","Percent_InCat")
+  return(res)
 }
+
+usability<-explore_attributes(train)
+
 
 X_quanti<-unlist(sapply(setdiff(1:ncol(train),nonusableatts), find_quanti))
 X_quali<-setdiff(setdiff(1:ncol(train),nonusableatts), c(10,X_quanti))
